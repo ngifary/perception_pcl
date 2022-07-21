@@ -60,7 +60,7 @@ namespace pcl_ros
         * \param indices the input set of indices to use from \a input
         * \param output the resultant filtered dataset
         */
-      inline void
+      void
       filter (const PointCloud2::ConstSharedPtr &input, const IndicesPtr &indices,
               PointCloud2 &output)
       {
@@ -73,17 +73,18 @@ namespace pcl_ros
         impl_.filter (pcl_output);
         pcl_conversions::moveFromPCL(pcl_output, output);
       }
+
+      /** \brief Parameter callback
+        * \param params parameter values to set
+        */
+      rcl_interfaces::msg::SetParametersResult
+      config_callback (const std::vector<rclcpp::Parameter> & params);
     
     private:
       /** \brief The PCL filter implementation used. */
       pcl::ExtractIndices<pcl::PCLPointCloud2> impl_;
     public:
       EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
-      ExtractIndices(const rclcpp::NodeOptions & options)
-        : Filter("filter_extract_indices", options)
-      {
-      }
   };
 }
 
