@@ -36,8 +36,8 @@
  */
 
 #include <pcl/common/io.h>
-#include "pcl_ros/surface/convex_hull.h"
-#include "pcl_ros/ptr_helper.h"
+#include "pcl_ros/surface/convex_hull.hpp"
+#include "pcl_ros/ptr_helper.hpp"
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 pcl_ros::ConvexHull2D::ConvexHull2D (const rclcpp::NodeOptions& options) : PCLNode("ConvexHull2DNode", options)

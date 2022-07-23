@@ -35,7 +35,7 @@
  *
  */
 
-#include "pcl_ros/features/boundary.h"
+#include "pcl_ros/features/boundary.hpp"
 pcl_ros::BoundaryEstimation::BoundaryEstimation (const rclcpp::NodeOptions& options) : FeatureFromNormals ("BoundaryEstimation", options) {};
 
 void 

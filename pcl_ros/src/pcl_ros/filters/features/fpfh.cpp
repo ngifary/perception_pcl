@@ -36,8 +36,8 @@
  */
 
 #include "class_loader/register_macro.hpp"
-#include "pcl_ros/features/fpfh.h"
-#include "pcl_ros/ptr_helper.h"
+#include "pcl_ros/features/fpfh.hpp"
+#include "pcl_ros/ptr_helper.hpp"
 
 pcl_ros::FPFHEstimation::FPFHEstimation(std::string node_name, const rclcpp::NodeOptions& options) : FeatureFromNormals(node_name, options) {
   pub_output_ = this->create_publisher<PointCloudOut> ("output", max_queue_size_);

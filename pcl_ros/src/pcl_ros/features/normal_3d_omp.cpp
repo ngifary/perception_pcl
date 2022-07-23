@@ -35,8 +35,8 @@
  *
  */
 
-#include "pcl_ros/features/normal_3d_omp.h"
-#include "pcl_ros/ptr_helper.h"
+#include "pcl_ros/features/normal_3d_omp.hpp"
+#include "pcl_ros/ptr_helper.hpp"
 
 void 
 pcl_ros::NormalEstimationOMP::emptyPublish (const PointCloudInConstPtr &cloud)

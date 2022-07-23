@@ -36,8 +36,8 @@
  */
 
 #include "class_loader/register_macro.hpp"
-#include "pcl_ros/features/normal_3d.h"
-#include "pcl_ros/ptr_helper.h"
+#include "pcl_ros/features/normal_3d.hpp"
+#include "pcl_ros/ptr_helper.hpp"
 
 pcl_ros::NormalEstimation::NormalEstimation (std::string node_name, const rclcpp::NodeOptions& options) : pcl_ros::Feature(node_name, options) {}
 void 

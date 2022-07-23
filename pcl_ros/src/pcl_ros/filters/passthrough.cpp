@@ -35,7 +35,7 @@
  *
  */
 
-#include "pcl_ros/filters/passthrough.h"
+#include "pcl_ros/filters/passthrough.hpp"
 
 pcl_ros::PassThrough::PassThrough(const rclcpp::NodeOptions& options)
 : Filter("PassThroughNode", options)

@@ -35,7 +35,7 @@
  *
  */
 
-#include "pcl_ros/features/pfh.h"
+#include "pcl_ros/features/pfh.hpp"
 
 void 
 pcl_ros::PFHEstimation::emptyPublish (const PointCloudInConstPtr &cloud)

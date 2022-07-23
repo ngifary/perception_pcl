@@ -34,8 +34,8 @@
  *
  */
 
-#include "pcl_ros/features/shot_omp.h"
-#include "pcl_ros/ptr_helper.h"
+#include "pcl_ros/features/shot_omp.hpp"
+#include "pcl_ros/ptr_helper.hpp"
 
 // Create the output publisher
 pcl_ros::SHOTEstimationOMP::SHOTEstimationOMP(const rclcpp::NodeOptions& options) : pcl_ros::FeatureFromNormals ("SHOTEstimationOMPNode", options) {

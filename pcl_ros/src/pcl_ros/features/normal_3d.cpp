@@ -35,7 +35,7 @@
  *
  */
 
-#include "pcl_ros/features/normal_3d.h"
+#include "pcl_ros/features/normal_3d.hpp"
 
 void 
 pcl_ros::NormalEstimation::emptyPublish (const PointCloudInConstPtr &cloud)

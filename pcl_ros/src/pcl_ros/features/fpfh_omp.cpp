@@ -35,7 +35,7 @@
  *
  */
 
-#include "pcl_ros/features/fpfh_omp.h"
+#include "pcl_ros/features/fpfh_omp.hpp"
 
 pcl_ros::FPFHEstimationOMP::FPFHEstimationOMP (const rclcpp::NodeOptions& options) : FeatureFromNormals("FPFHEstimationOMPNode", options) {
   pub_output_ = this->create_publisher<PointCloudOut> ("output");

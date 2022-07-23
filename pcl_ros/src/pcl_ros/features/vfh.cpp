@@ -36,8 +36,8 @@
  */
 
 #include "class_loader/register_macro.hpp"
-#include "pcl_ros/features/vfh.h"
-#include "pcl_ros/ptr_helper.h"
+#include "pcl_ros/features/vfh.hpp"
+#include "pcl_ros/ptr_helper.hpp"
 
 void 
 pcl_ros::VFHEstimation::emptyPublish (const PointCloudInConstPtr &cloud)

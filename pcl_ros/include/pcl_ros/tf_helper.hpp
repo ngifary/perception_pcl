@@ -31,10 +31,12 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef PCL_ROS__TF_HELPER_HPP_
-#define PCL_ROS__TF_HELPER_HPP_
 
-// TODO(sloretz) remove when ros2/geometry2#180 merged
+#ifndef PCL_ROS__FEATURES__SHOT_HPP_
+#define PCL_ROS__FEATURES__SHOT_HPP_
+
+#include <pcl/features/shot.h>
+#include "pcl_ros/features/pfh.hpp"
 
 namespace pcl_ros
 {
@@ -63,4 +65,4 @@ namespace pcl_ros
   }
 }  // namespace pcl_ros
 
-#endif  // PCL_ROS__TF_HELPER_HPP_
+#endif  // PCL_ROS__FEATURES__SHOT_HPP_

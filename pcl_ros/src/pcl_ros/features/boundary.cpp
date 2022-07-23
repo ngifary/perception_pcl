@@ -35,7 +35,7 @@
  *
  */
 
-#include "pcl_ros/features/boundary.h"
+#include "pcl_ros/features/boundary.hpp"
 pcl_ros::BoundaryEstimation::BoundaryEstimation (std::string node_name, const rclcpp::NodeOptions& options) : pcl_ros::FeatureFromNormals(node_name, options)
 {
   pub_output_ = this->create_publisher<PointCloudOut> ("output", max_queue_size_);

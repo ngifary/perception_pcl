@@ -36,7 +36,7 @@
  */
 
 #include "class_loader/register_macro.hpp"
-#include "pcl_ros/io/bag_io.h"
+#include "pcl_ros/io/bag_io.hpp"
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 /*bool

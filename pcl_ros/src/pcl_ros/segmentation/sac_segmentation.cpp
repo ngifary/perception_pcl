@@ -35,11 +35,11 @@
  *
  */
 
-#include "pcl_ros/segmentation/sac_segmentation.h"
+#include "pcl_ros/segmentation/sac_segmentation.hpp"
 #include <pcl/io/io.h>
 
 #include <pcl_conversions/pcl_conversions.h>
-#include "pcl_ros/ptr_helper.h"
+#include "pcl_ros/ptr_helper.hpp"
 
 using pcl_conversions::fromPCL;
 

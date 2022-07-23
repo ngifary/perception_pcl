@@ -35,8 +35,8 @@
  *
  */
 
-#include "pcl_ros/features/vfh.h"
-#include "pcl_ros/ptr_helper.h"
+#include "pcl_ros/features/vfh.hpp"
+#include "pcl_ros/ptr_helper.hpp"
 
 pcl_ros::VFHEstimation::VFHEstimation(const rclcpp::NodeOptions& options) : FeatureFromNormals("VFHEstimationNode", options)
 {

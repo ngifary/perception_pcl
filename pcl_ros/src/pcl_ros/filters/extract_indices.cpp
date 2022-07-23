@@ -35,19 +35,18 @@
  *
  */
 
-#include "pcl_ros/filters/extract_indices.h"
-#include "rclcpp_components/register_node_macro.hpp"
+#include "pcl_ros/filters/extract_indices.hpp"
 
-ExtractIndices(const rclcpp::NodeOptions &options)
+pcl_ros::ExtractIndices::ExtractIndices(const rclcpp::NodeOptions &options)
     : Filter("filter_extract_indices", options)
 {
     rcl_interfaces::msg::ParameterDescriptor neg_desc;
     neg_desc.name = "negative";
     neg_desc.type = rcl_interfaces::msg::ParameterType::PARAMETER_BOOL;
-    neg_desc.description = "The extraction to: %s.", (config.negative ? "indices" : "everything but the indices");
+    neg_desc.description = "The extraction to: %s.", (true ? "indices" : "everything but the indices");
     declare_parameter(neg_desc.name, rclcpp::ParameterValue(false), neg_desc);
 
-    callback_handle_ = add_on_set_parameters_callback(std::bind(&PassThrough::config_callback, this, std::placeholders::_1));
+    callback_handle_ = add_on_set_parameters_callback(std::bind(&ExtractIndices::config_callback, this, std::placeholders::_1));
     std::vector<std::string> param_names{neg_desc.name};
     auto result = config_callback(get_parameters(param_names));
     if (!result.successful)
@@ -61,8 +60,8 @@ pcl_ros::ExtractIndices::config_callback(const std::vector<rclcpp::Parameter> &p
 {
     std::lock_guard<std::mutex> lock(mutex_);
 
-    bool negative
-    impl_.setNegative(negative)
+    bool negative;
+    impl_.setNegative(negative);
 
     for (const rclcpp::Parameter &param : params)
     {
@@ -72,7 +71,7 @@ pcl_ros::ExtractIndices::config_callback(const std::vector<rclcpp::Parameter> &p
             if (negative != param.as_bool())
             {
                 negative = param.as_bool();
-                RCLCPP_DEBUG(get_logger(), "Setting the extraction to: %s.", (config.negative ? "indices" : "everything but the indices"));
+                RCLCPP_DEBUG(get_logger(), "Setting the extraction to: %s.", (negative ? "indices" : "everything but the indices"));
                 // Set the filter field if different
                 impl_.setNegative(param.as_bool());
             }
@@ -85,4 +84,5 @@ pcl_ros::ExtractIndices::config_callback(const std::vector<rclcpp::Parameter> &p
     return result;
 }
 
+#include "rclcpp_components/register_node_macro.hpp"
 RCLCPP_COMPONENTS_REGISTER_NODE(pcl_ros::ExtractIndices)

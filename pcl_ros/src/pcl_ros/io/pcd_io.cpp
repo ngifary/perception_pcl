@@ -35,7 +35,7 @@
  *
  */
 
-#include <pcl_ros/io/pcd_io.h>
+#include <pcl_ros/io/pcd_io.hpp>
 
 #include <rclcpp/create_publisher.hpp>
 #include <rclcpp/create_timer.hpp>

@@ -35,8 +35,8 @@
  *
  */
 
-#include "pcl_ros/features/moment_invariants.h"
-#include "pcl_ros/ptr_helper.h"
+#include "pcl_ros/features/moment_invariants.hpp"
+#include "pcl_ros/ptr_helper.hpp"
 
 void 
 pcl_ros::MomentInvariantsEstimation::emptyPublish (const PointCloudInConstPtr &cloud)

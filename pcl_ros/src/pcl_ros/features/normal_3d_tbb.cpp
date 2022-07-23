@@ -35,8 +35,8 @@
  *
  */
 
-#include "pcl_ros/features/normal_3d_tbb.h"
-#include "pcl_ros/ptr_helper.h"
+#include "pcl_ros/features/normal_3d_tbb.hpp"
+#include "pcl_ros/ptr_helper.hpp"
 
 #if defined HAVE_TBB
 

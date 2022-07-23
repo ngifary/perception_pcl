@@ -5,39 +5,22 @@ if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
 endif()
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+  add_compile_options(-Wall -Wextra -Wpedantic -fPIC)
 endif()
 
 ## Find system dependencies
-find_package(Boost REQUIRED COMPONENTS system filesystem thread)
 find_package(Eigen3 REQUIRED)
 find_package(PCL REQUIRED QUIET COMPONENTS core features filters io segmentation surface)
 
-if(NOT "${PCL_LIBRARIES}" STREQUAL "")
-  # For debian: https://github.com/ros-perception/perception_pcl/issues/139
-  list(REMOVE_ITEM PCL_LIBRARIES
-    "vtkGUISupportQt"
-    "vtkGUISupportQtOpenGL"
-    "vtkGUISupportQtSQL"
-    "vtkGUISupportQtWebkit"
-    "vtkViewsQt"
-    "vtkRenderingQt")
-endif()
-
-find_package(ament_cmake_ros REQUIRED)
-find_package(message_filters REQUIRED)
+## Find ROS package dependencies
+find_package(ament_cmake REQUIRED)
 find_package(pcl_conversions REQUIRED)
-find_package(pcl_msgs REQUIRED)
-# find_package(rosbag2 REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(std_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
-find_package(tf2_eigen REQUIRED)
 
 
 ament_export_dependencies(
@@ -51,13 +34,14 @@ ament_export_dependencies(
   std_msgs
   tf2
   tf2_geometry_msgs
+  tf2_ros
   EIGEN3
   PCL
-  BOOST
 )
 
-ament_export_include_directories(
+include_directories(
   include
+  ${PCL_INCLUDE_DIRS}
 )
 
 ## Declare the pcl_ros_tf library
@@ -69,9 +53,7 @@ ament_target_dependencies(pcl_ros_tf
   "tf2_geometry_msgs"
   "tf2_ros"
 )
-target_include_directories(pcl_ros_tf PUBLIC include ${PCL_INCLUDE_DIRS})
 target_link_libraries(pcl_ros_tf ${PCL_LIBRARIES})
-ament_export_libraries(pcl_ros_tf)
 
 ## Nodes
 ## Declare the pcl_ros_io library
@@ -137,6 +119,22 @@ rclcpp_components_register_node(filter_crop_box PLUGIN
 )
 install(TARGETS
   filter_crop_box
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+# Create component for extract indices filter
+add_library(filter_extract_indices SHARED
+  src/pcl_ros/filters/extract_indices.cpp
+)
+target_link_libraries(filter_extract_indices pcl_ros_filters)
+rclcpp_components_register_node(filter_extract_indices PLUGIN
+  PLUGIN "pcl_ros::ExtractIndices"
+  EXECUTABLE filter_extract_indices_node
+)
+install(TARGETS
+  filter_extract_indices
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
@@ -277,8 +275,10 @@ if(BUILD_TESTING)
 endif(BUILD_TESTING)
 
 
-install(DIRECTORY include/
-  DESTINATION include)
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
 
 install(
   TARGETS
@@ -293,12 +293,18 @@ install(
 #    bag_to_pcd
 #    convert_pcd_to_image
 #    convert_pointcloud_to_image
+  EXPORT export_pcl_ros
   RUNTIME DESTINATION bin
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
+  INCLUDES DESTINATION include
 )
 
 install(DIRECTORY plugins samples
   DESTINATION share/${PROJECT_NAME})
 
+ament_export_include_directories(include)
+ament_export_libraries(pcl_ros_tf)
+ament_export_dependencies(${dependencies})
+ament_export_targets(export_pcl_ros HAS_LIBRARY_TARGET)
 ament_package()

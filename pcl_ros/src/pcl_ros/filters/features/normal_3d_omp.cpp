@@ -35,8 +35,8 @@
  *
  */
 
-#include "pcl_ros/features/normal_3d_omp.h"
-#include "pcl_ros/ptr_helper.h"
+#include "pcl_ros/features/normal_3d_omp.hpp"
+#include "pcl_ros/ptr_helper.hpp"
 
 pcl_ros::NormalEstimationOMP::NormalEstimationOMP(const rclcpp::NodeOptions& options) : Feature("NormalEstimationOMPNode", options) {
   pub_output_ = this->create_publisher<PointCloudOut> ("output", max_queue_size_);

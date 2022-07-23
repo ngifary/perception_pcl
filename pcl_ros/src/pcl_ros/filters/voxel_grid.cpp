@@ -35,8 +35,8 @@
  *
  */
 
-#include "pcl_ros/filters/voxel_grid.h"
-#include "pcl_ros/ptr_helper.h"
+#include "pcl_ros/filters/voxel_grid.hpp"
+#include "pcl_ros/ptr_helper.hpp"
 
 pcl_ros::VoxelGrid::VoxelGrid(const rclcpp::NodeOptions& options)
 : Filter("VoxelGridNode", options)

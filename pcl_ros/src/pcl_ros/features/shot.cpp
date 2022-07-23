@@ -34,8 +34,8 @@
  *
  */
 
-#include "pcl_ros/features/shot.h"
-#include "pcl_ros/ptr_helper.h"
+#include "pcl_ros/features/shot.hpp"
+#include "pcl_ros/ptr_helper.hpp"
 
 pcl_ros::SHOTEstimation::SHOTEstimation (const rclcpp::NodeOptions& options) : FeatureFromNormals("SHOTEstimationNode", options)
 {

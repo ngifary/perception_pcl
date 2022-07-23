@@ -35,7 +35,7 @@
  *
  */
 
-#include "pcl_ros/filters/radius_outlier_removal.h"
+#include "pcl_ros/filters/radius_outlier_removal.hpp"
 
 pcl_ros::RadiusOutlierRemoval::RadiusOutlierRemoval(const rclcpp::NodeOptions& options)
 : Filter("RadiusOutlierRemovalNode", options)

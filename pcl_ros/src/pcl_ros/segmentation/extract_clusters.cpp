@@ -38,7 +38,7 @@
 #include "class_loader/register_macro.hpp"
 #include <pcl/io/io.h>
 #include <pcl/PointIndices.h>
-#include "pcl_ros/segmentation/extract_clusters.h"
+#include "pcl_ros/segmentation/extract_clusters.hpp"
 
 #include <pcl_conversions/pcl_conversions.h>
 

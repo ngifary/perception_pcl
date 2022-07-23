@@ -36,7 +36,7 @@
  */
 
 #include "class_loader/register_macro.hpp"
-#include "pcl_ros/filters/statistical_outlier_removal.h"
+#include "pcl_ros/filters/statistical_outlier_removal.hpp"
 
 typedef pcl_ros::StatisticalOutlierRemoval StatisticalOutlierRemoval;
 //CLASS_LOADER_REGISTER_CLASS(StatisticalOutlierRemoval, rclcpp::Node)

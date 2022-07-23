@@ -35,8 +35,8 @@
  *
  */
 
-#include "pcl_ros/features/pfh.h"
-#include "pcl_ros/ptr_helper.h"
+#include "pcl_ros/features/pfh.hpp"
+#include "pcl_ros/ptr_helper.hpp"
 
 pcl_ros::PFHEstimation::PFHEstimation(const rclcpp::NodeOptions& options) : FeatureFromNormals("PFHEstimationNode", options) {
   pub_output_ = this->create_publisher<PointCloudOut> ("output", max_queue_size_);

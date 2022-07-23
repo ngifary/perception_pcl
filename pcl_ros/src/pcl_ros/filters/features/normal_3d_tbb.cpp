@@ -36,7 +36,7 @@
  */
 
 #include "class_loader/register_macro.hpp"
-#include "pcl_ros/features/normal_3d_tbb.h"
+#include "pcl_ros/features/normal_3d_tbb.hpp"
 
 #if defined HAVE_TBB
 

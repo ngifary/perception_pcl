@@ -36,8 +36,8 @@
  */
 
 #include "class_loader/register_macro.hpp"
-#include "pcl_ros/filters/project_inliers.h"
-#include <pcl/io/io.h>
+#include "pcl_ros/filters/project_inliers.hpp"
+#include <pcl/io/io.hpp>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 pcl_ros::ProjectInliers::ProjectInliers (const rclcpp::NodeOptions& options) : Filter("ProjectInliersNode", options), model_ ()

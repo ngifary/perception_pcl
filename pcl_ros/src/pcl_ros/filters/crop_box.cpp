@@ -36,7 +36,7 @@
  *
  */
 
-#include "pcl_ros/filters/crop_box.h"
+#include "pcl_ros/filters/crop_box.hpp"
 
 pcl_ros::CropBox::CropBox(const rclcpp::NodeOptions & options)
 : Filter("CropBoxNode", options)
