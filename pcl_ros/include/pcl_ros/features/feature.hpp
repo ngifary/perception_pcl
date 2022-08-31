@@ -46,7 +46,7 @@
 #include <message_filters/pass_through.h>
 
 // PCL conversions
-#include <pcl_conversions/pcl_conversions.h>
+#include <pcl_conversions/pcl_conversions.hpp>
 #include "pcl_ros/ptr_helper.hpp"
 
 namespace pcl_ros
@@ -137,7 +137,7 @@ namespace pcl_ros
         indices.header.stamp = pcl_conversions::fromPCL(input->header).stamp;
         PointCloudIn cloud;
         cloud.header.stamp = input->header.stamp;
-        nf_pc_.add (to_std_ptr (cloud.makeShared()));
+        nf_pc_.add (cloud.makeShared());
         nf_pi_.add (std::make_shared<PointIndices> (indices));
       }
 

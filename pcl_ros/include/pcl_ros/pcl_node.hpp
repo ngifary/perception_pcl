@@ -31,7 +31,7 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *
- * $Id: pcl_node.h 33238 2010-03-11 00:46:58Z rusu $
+ * $Id: pcl_node.hpp 33238 2010-03-11 00:46:58Z rusu $
  *
  */
 
@@ -41,8 +41,8 @@
 
 **/
 
-#ifndef PCL_NODE_H_
-#define PCL_NODE_H_
+#ifndef PCL_NODE_HPP_
+#define PCL_NODE_HPP_
 
 #include <rclcpp/rclcpp.hpp>
 #include <rcutils/error_handling.h>
@@ -53,7 +53,7 @@
 #include <pcl_msgs/msg/point_indices.hpp>
 #include <pcl_msgs/msg/model_coefficients.hpp>
 #include <pcl/point_types.h>
-#include <pcl_conversions/pcl_conversions.h>
+#include <pcl_conversions/pcl_conversions.hpp>
 #include "pcl_ros/point_cloud.hpp"
 // ROS Node includes
 #include <message_filters/subscriber.h>
@@ -276,4 +276,4 @@ namespace pcl_ros
   };
 }
 
-#endif  //#ifndef PCL_NODE_H_
+#endif  //#ifndef PCL_NODE_HPP_

@@ -37,43 +37,40 @@
 #include "pcl_ros/features/shot.hpp"
 #include "pcl_ros/ptr_helper.hpp"
 
-pcl_ros::SHOTEstimation::SHOTEstimation (const rclcpp::NodeOptions& options) : FeatureFromNormals("SHOTEstimationNode", options)
+pcl_ros::SHOTEstimation::SHOTEstimation(const rclcpp::NodeOptions &options) : FeatureFromNormals("SHOTEstimationNode", options)
 {
-  pub_output_ = this->create_publisher<PointCloudOut> ("output", max_queue_size_);
+  pub_output_ = this->create_publisher<PointCloudOut>("output", max_queue_size_);
 }
 
-
-void 
-pcl_ros::SHOTEstimation::emptyPublish (const PointCloudInConstPtr &cloud)
+void pcl_ros::SHOTEstimation::emptyPublish(const PointCloudInConstPtr &cloud)
 {
   PointCloudOut output;
   output.header = cloud->header;
-  pub_output_->publish (output);
+  pub_output_->publish(output);
 }
 
-void 
-pcl_ros::SHOTEstimation::computePublish (const PointCloudInConstPtr &cloud,
-                                         const PointCloudNConstPtr &normals,
-                                         const PointCloudInConstPtr &surface,
-                                         const IndicesPtr &indices)
+void pcl_ros::SHOTEstimation::computePublish(const PointCloudInConstPtr &cloud,
+                                             const PointCloudNConstPtr &normals,
+                                             const PointCloudInConstPtr &surface,
+                                             const IndicesPtr &indices)
 {
   // Set the parameters
-  impl_.setKSearch (k_);
-  impl_.setRadiusSearch (search_radius_);
+  impl_.setKSearch(k_);
+  impl_.setRadiusSearch(search_radius_);
 
   // Set the inputs
-  impl_.setInputCloud (cloud);
-  impl_.setIndices (to_boost_ptr(indices));
-  impl_.setSearchSurface (surface);
-  impl_.setInputNormals (normals);
+  impl_.setInputCloud(cloud);
+  impl_.setIndices(indices);
+  impl_.setSearchSurface(surface);
+  impl_.setInputNormals(normals);
   // Estimate the feature
   PointCloudOut output;
-  impl_.compute (output);
+  impl_.compute(output);
 
   // Publish a shared ptr const data
   // Enforce that the TF frame and the timestamp are copied
   output.header = cloud->header;
-  pub_output_->publish (output);
+  pub_output_->publish(output);
 }
 
 typedef pcl_ros::SHOTEstimation SHOTEstimation;

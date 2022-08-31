@@ -39,6 +39,7 @@
 #define PCL_ROS__SURFACE__MOVING_LEAST_SQUARES_HPP_
 
 #include "pcl_ros/pcl_node.hpp"
+#include <pcl/kdtree/kdtree_flann.h>
 
 // PCL includes
 #include <pcl/surface/mls.h>

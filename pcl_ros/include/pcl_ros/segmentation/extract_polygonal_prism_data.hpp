@@ -47,8 +47,8 @@
 #include <pcl/segmentation/extract_polygonal_prism_data.h>
 
 // Dynamic reconfigure
-#include <dynamic_reconfigure/server.h>
-#include "pcl_ros/ExtractPolygonalPrismDataConfig.hpp"
+// #include <dynamic_reconfigure/server.h>
+// #include "pcl_ros/ExtractPolygonalPrismDataConfig.hpp"
 
 namespace pcl_ros
 {

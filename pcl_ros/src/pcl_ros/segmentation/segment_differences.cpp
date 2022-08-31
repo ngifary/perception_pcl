@@ -36,7 +36,7 @@
  */
 
 #include "pcl_ros/segmentation/segment_differences.hpp"
-#include <pcl/io/io.h>
+#include <pcl/common/io.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 pcl_ros::SegmentDifferences::SegmentDifferences (const rclcpp::NodeOptions& options) : PCLNode("SegmentDifferencesNode", options)

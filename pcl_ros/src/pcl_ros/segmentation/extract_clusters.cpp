@@ -36,11 +36,11 @@
  */
 
 #include "class_loader/register_macro.hpp"
-#include <pcl/io/io.h>
+#include <pcl/common/io.h>
 #include <pcl/PointIndices.h>
 #include "pcl_ros/segmentation/extract_clusters.hpp"
 
-#include <pcl_conversions/pcl_conversions.h>
+#include <pcl_conversions/pcl_conversions.hpp>
 
 using pcl_conversions::fromPCL;
 using pcl_conversions::moveFromPCL;

@@ -50,10 +50,10 @@
 // ROS core
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/create_timer.hpp>
-#include <pcl/io/io.h>
+#include <pcl/common/io.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
-#include <pcl_conversions/pcl_conversions.h>
+#include <pcl_conversions/pcl_conversions.hpp>
 
 class PCDGenerator : public rclcpp::Node
 {

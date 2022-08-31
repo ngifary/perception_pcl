@@ -42,7 +42,7 @@ pcl_ros::NormalEstimation::emptyPublish (const PointCloudInConstPtr &cloud)
 {
   PointCloudOut output;
   output.header = cloud->header;
-  pub_output_->publish (output.makeShared ());
+  pub_output_->publish (output);
 }
 
 void 
@@ -56,7 +56,7 @@ pcl_ros::NormalEstimation::computePublish (const PointCloudInConstPtr &cloud,
 
   // Set the inputs
   impl_.setInputCloud (cloud);
-  impl_.setIndices (to_boost_ptr (indices));
+  impl_.setIndices (indices);
   impl_.setSearchSurface (surface);
   // Estimate the feature
   PointCloudOut output;

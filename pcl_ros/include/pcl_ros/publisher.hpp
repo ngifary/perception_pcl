@@ -49,7 +49,7 @@
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <pcl/conversions.h>
 
-#include <pcl_conversions/pcl_conversions.h>
+#include <pcl_conversions/pcl_conversions.hpp>
 
 /*namespace pcl_ros
 {

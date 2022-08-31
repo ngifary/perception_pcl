@@ -11,10 +11,10 @@
 
   </description>
 
-  <author>Open Perception</author>
+  <!-- <author>Open Perception</author>
   <author email="julius@kammerl.de">Julius Kammerl</author>
   <author email="william@osrfoundation.org">William Woodall</author>
-  <author>Andreas Klintberg</author>
+  <author>Andreas Klintberg</author> -->
 
   <maintainer email="paul@bovbel.com">Paul Bovbel</maintainer>
   <maintainer email="stevenmacenski@gmail.com">Steve Macenski</maintainer>

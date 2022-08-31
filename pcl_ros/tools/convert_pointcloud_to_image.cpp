@@ -46,7 +46,7 @@
 //pcl::toROSMsg
 #include <pcl/io/pcd_io.h>
 //conversions from PCL custom types
-#include <pcl_conversions/pcl_conversions.h>
+#include <pcl_conversions/pcl_conversions.hpp>
 //stl stuff
 #include <string>
 

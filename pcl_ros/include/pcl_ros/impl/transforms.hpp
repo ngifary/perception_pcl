@@ -39,7 +39,7 @@
 
 #include "pcl_ros/transforms.hpp"
 #include <pcl/common/transforms.h>
-#include <pcl_conversions/pcl_conversions.h>
+#include <pcl_conversions/pcl_conversions.hpp>
 #include <tf2/convert.h>
 #include <tf2/exceptions.h>
 #include <tf2/LinearMath/Transform.h>

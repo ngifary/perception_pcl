@@ -37,9 +37,9 @@
 
 #include "pcl_ros/transforms.hpp"
 #include "pcl_ros/segmentation/extract_polygonal_prism_data.hpp"
-#include <pcl/io/io.h>
+#include <pcl/common/io.h>
 
-#include <pcl_conversions/pcl_conversions.h>
+#include <pcl_conversions/pcl_conversions.hpp>
 
 using pcl_conversions::moveFromPCL;
 using pcl_conversions::moveToPCL;

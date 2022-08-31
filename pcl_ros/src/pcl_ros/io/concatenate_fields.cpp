@@ -37,10 +37,10 @@
 
 /** \author Radu Bogdan Rusu */
 
-#include <pcl/io/io.h>
+#include <pcl/common/io.h>
 #include "pcl_ros/io/concatenate_fields.hpp"
 
-#include <pcl_conversions/pcl_conversions.h>
+#include <pcl_conversions/pcl_conversions.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 pcl_ros::PointCloudConcatenateFieldsSynchronizer::PointCloudConcatenateFieldsSynchronizer (const rclcpp::NodeOptions& options) : rclcpp::Node ("PointCloudConcatenateFieldsSynchronizerNode", options), maximum_queue_size_ (3), maximum_seconds_ (0)

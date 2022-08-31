@@ -56,7 +56,7 @@ pcl_ros::MomentInvariantsEstimation::computePublish (const PointCloudInConstPtr 
 
   // Set the inputs
   impl_.setInputCloud (cloud);
-  impl_.setIndices (to_boost_ptr(indices));
+  impl_.setIndices (indices);
   impl_.setSearchSurface (surface);
   // Estimate the feature
   PointCloudOut output;

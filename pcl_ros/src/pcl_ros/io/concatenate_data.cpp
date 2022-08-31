@@ -35,11 +35,11 @@
  *
  */
 
-#include <pcl/io/io.h>
+#include <pcl/common/io.h>
 #include "pcl_ros/transforms.hpp"
 #include "pcl_ros/io/concatenate_data.hpp"
 
-#include <pcl_conversions/pcl_conversions.h>
+#include <pcl_conversions/pcl_conversions.hpp>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 pcl_ros::PointCloudConcatenateDataSynchronizer::PointCloudConcatenateDataSynchronizer (const rclcpp::NodeOptions& options) : rclcpp::Node("PointCloudConcatenateDataSynchronizerNode", options), maximum_queue_size_ (3), approximate_sync_(false), tf_buffer_(this->get_clock()), tf_listener_(tf_buffer_)

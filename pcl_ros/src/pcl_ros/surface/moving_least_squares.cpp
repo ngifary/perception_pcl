@@ -36,7 +36,7 @@
  */
 
 #include "pcl_ros/surface/moving_least_squares.hpp"
-#include <pcl/io/io.h>
+#include <pcl/common/io.h>
 //////////////////////////////////////////////////////////////////////////////////////////////
 pcl_ros::MovingLeastSquares::MovingLeastSquares (const rclcpp::NodeOptions& options) : PCLNode("MovingLeastSquaresNode", options)
 {

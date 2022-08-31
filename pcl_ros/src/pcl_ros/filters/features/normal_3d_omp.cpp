@@ -38,44 +38,42 @@
 #include "pcl_ros/features/normal_3d_omp.hpp"
 #include "pcl_ros/ptr_helper.hpp"
 
-pcl_ros::NormalEstimationOMP::NormalEstimationOMP(const rclcpp::NodeOptions& options) : Feature("NormalEstimationOMPNode", options) {
-  pub_output_ = this->create_publisher<PointCloudOut> ("output", max_queue_size_);
-
+pcl_ros::NormalEstimationOMP::NormalEstimationOMP(const rclcpp::NodeOptions &options) : Feature("NormalEstimationOMPNode", options)
+{
+  pub_output_ = this->create_publisher<PointCloudOut>("output", max_queue_size_);
 }
 
-void 
-pcl_ros::NormalEstimationOMP::emptyPublish (const PointCloudInConstPtr &cloud)
+void pcl_ros::NormalEstimationOMP::emptyPublish(const PointCloudInConstPtr &cloud)
 {
   PointCloudOut output;
   output.header = cloud->header;
-  pub_output_->publish (output);
+  pub_output_->publish(output);
 }
 
-void 
-pcl_ros::NormalEstimationOMP::computePublish (const PointCloudInConstPtr &cloud,
-                                              const PointCloudInConstPtr &surface,
-                                              const IndicesPtr &indices)
+void pcl_ros::NormalEstimationOMP::computePublish(const PointCloudInConstPtr &cloud,
+                                                  const PointCloudInConstPtr &surface,
+                                                  const IndicesPtr &indices)
 {
   // Set the parameters
-  impl_.setKSearch (k_);
-  impl_.setRadiusSearch (search_radius_);
+  impl_.setKSearch(k_);
+  impl_.setRadiusSearch(search_radius_);
   // Initialize the spatial locator
   // Function removed in later versions of PCL
   // initTree (spatial_locator_type_, tree_, k_);
-  impl_.setSearchMethod (tree_);
+  impl_.setSearchMethod(tree_);
 
   // Set the inputs
-  impl_.setInputCloud (cloud);
-  impl_.setIndices (to_boost_ptr(indices));
-  impl_.setSearchSurface (surface);
+  impl_.setInputCloud(cloud);
+  impl_.setIndices(indices);
+  impl_.setSearchSurface(surface);
   // Estimate the feature
   PointCloudOut output;
-  impl_.compute (output);
+  impl_.compute(output);
 
   // Publish a shared ptr const data
   // Enforce that the TF frame and the timestamp are copied
   output.header = cloud->header;
-  pub_output_->publish (output);
+  pub_output_->publish(output);
 }
 
 typedef pcl_ros::NormalEstimationOMP NormalEstimationOMP;

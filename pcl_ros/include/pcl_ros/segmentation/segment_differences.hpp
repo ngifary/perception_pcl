@@ -38,7 +38,7 @@
 #ifndef PCL_ROS__SEGMENTATION__SEGMENT_DIFFERENCES_HPP_
 #define PCL_ROS__SEGMENTATION__SEGMENT_DIFFERENCES_HPP_
 
-#include <pcl/segmentation/segment_differences.hpp>
+#include <pcl/segmentation/segment_differences.h>
 #include "pcl_ros/pcl_node.hpp"
 
 

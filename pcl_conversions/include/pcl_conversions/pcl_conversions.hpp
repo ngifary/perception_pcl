@@ -34,8 +34,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PCL_CONVERSIONS_H__
-#define PCL_CONVERSIONS_H__
+#ifndef PCL_CONVERSIONS_HPP__
+#define PCL_CONVERSIONS_HPP__
 
 #include <vector>
 
@@ -929,4 +929,4 @@ namespace ros
 } // namespace ros
 **/
 
-#endif /* PCL_CONVERSIONS_H__ */
+#endif /* PCL_CONVERSIONS_HPP__ */

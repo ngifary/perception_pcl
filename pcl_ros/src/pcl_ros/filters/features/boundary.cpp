@@ -36,42 +36,40 @@
  */
 
 #include "pcl_ros/features/boundary.hpp"
-pcl_ros::BoundaryEstimation::BoundaryEstimation (const rclcpp::NodeOptions& options) : FeatureFromNormals ("BoundaryEstimation", options) {};
+pcl_ros::BoundaryEstimation::BoundaryEstimation(const rclcpp::NodeOptions &options) : FeatureFromNormals("BoundaryEstimation", options){};
 
-void 
-pcl_ros::BoundaryEstimation::emptyPublish (const PointCloudInConstPtr &cloud)
+void pcl_ros::BoundaryEstimation::emptyPublish(const PointCloudInConstPtr &cloud)
 {
   PointCloudOut output;
   output.header = cloud->header;
-  pub_output_->publish (output);
+  pub_output_->publish(output);
 }
 
-void 
-pcl_ros::BoundaryEstimation::computePublish (const PointCloudInConstPtr &cloud, 
-                                             const PointCloudNConstPtr &normals,
-                                             const PointCloudInConstPtr &surface,
-                                             const IndicesPtr &indices)
+void pcl_ros::BoundaryEstimation::computePublish(const PointCloudInConstPtr &cloud,
+                                                 const PointCloudNConstPtr &normals,
+                                                 const PointCloudInConstPtr &surface,
+                                                 const IndicesPtr &indices)
 {
   // Set the parameters
-  impl_.setKSearch (k_);
-  impl_.setRadiusSearch (search_radius_);
+  impl_.setKSearch(k_);
+  impl_.setRadiusSearch(search_radius_);
   // Initialize the spatial locator
   // Function removed in later versions of PCL
   // initTree (spatial_locator_type_, tree_, k_);
-  impl_.setSearchMethod (tree_);
+  impl_.setSearchMethod(tree_);
 
   // Set the inputs
-  impl_.setInputCloud (cloud);
-  impl_.setIndices (to_boost_ptr (indices));
-  impl_.setSearchSurface (surface);
-  impl_.setInputNormals (normals);
+  impl_.setInputCloud(cloud);
+  impl_.setIndices(indices);
+  impl_.setSearchSurface(surface);
+  impl_.setInputNormals(normals);
   // Estimate the feature
   PointCloudOut output;
-  impl_.compute (output);
+  impl_.compute(output);
 
   // Enforce that the TF frame and the timestamp are copied
   output.header = cloud->header;
-  pub_output_->publish (output);
+  pub_output_->publish(output);
 }
 
 typedef pcl_ros::BoundaryEstimation BoundaryEstimation;

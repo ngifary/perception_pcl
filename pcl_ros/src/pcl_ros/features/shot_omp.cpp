@@ -38,42 +38,41 @@
 #include "pcl_ros/ptr_helper.hpp"
 
 // Create the output publisher
-pcl_ros::SHOTEstimationOMP::SHOTEstimationOMP(const rclcpp::NodeOptions& options) : pcl_ros::FeatureFromNormals ("SHOTEstimationOMPNode", options) {
-  pub_output_ = this->create_publisher<PointCloudOut> ("output", max_queue_size_);
+pcl_ros::SHOTEstimationOMP::SHOTEstimationOMP(const rclcpp::NodeOptions &options) : pcl_ros::FeatureFromNormals("SHOTEstimationOMPNode", options)
+{
+  pub_output_ = this->create_publisher<PointCloudOut>("output", max_queue_size_);
 }
 
-void 
-pcl_ros::SHOTEstimationOMP::emptyPublish (const PointCloudInConstPtr &cloud)
+void pcl_ros::SHOTEstimationOMP::emptyPublish(const PointCloudInConstPtr &cloud)
 {
   PointCloudOut output;
   output.header = cloud->header;
-  pub_output_->publish (output);
+  pub_output_->publish(output);
 }
 
-void 
-pcl_ros::SHOTEstimationOMP::computePublish (const PointCloudInConstPtr &cloud,
-                                            const PointCloudNConstPtr &normals,
-                                            const PointCloudInConstPtr &surface,
-                                            const IndicesPtr &indices)
+void pcl_ros::SHOTEstimationOMP::computePublish(const PointCloudInConstPtr &cloud,
+                                                const PointCloudNConstPtr &normals,
+                                                const PointCloudInConstPtr &surface,
+                                                const IndicesPtr &indices)
 {
   // Set the parameters
-  impl_.setKSearch (k_);
-  impl_.setRadiusSearch (search_radius_);
+  impl_.setKSearch(k_);
+  impl_.setRadiusSearch(search_radius_);
 
   // Set the inputs
-  impl_.setInputCloud (cloud);
-  
-  impl_.setIndices (to_boost_ptr(indices));
-  impl_.setSearchSurface (surface);
-  impl_.setInputNormals (normals);
+  impl_.setInputCloud(cloud);
+
+  impl_.setIndices(indices);
+  impl_.setSearchSurface(surface);
+  impl_.setInputNormals(normals);
   // Estimate the feature
   PointCloudOut output;
-  impl_.compute (output);
+  impl_.compute(output);
 
   // Publish a shared ptr const data
   // Enforce that the TF frame and the timestamp are copied
   output.header = cloud->header;
-  pub_output_->publish (output);
+  pub_output_->publish(output);
 }
 
 typedef pcl_ros::SHOTEstimationOMP SHOTEstimationOMP;
