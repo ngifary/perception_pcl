@@ -57,78 +57,83 @@
 
 class PCDGenerator : public rclcpp::Node
 {
-  //protected:
-  //  std::string tf_frame_;
-  public:
-    std::string tf_frame_;
+  // protected:
+  //   std::string tf_frame_;
+public:
+  std::string tf_frame_;
 
-    // ROS messages
-    sensor_msgs::msg::PointCloud2 cloud_;
+  // ROS messages
+  sensor_msgs::msg::PointCloud2 cloud_;
 
-    std::string cloud_topic_;
+  std::string cloud_topic_;
 
-    rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_;
+  rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_;
 
-    rclcpp::TimerBase::SharedPtr timer_;
+  rclcpp::TimerBase::SharedPtr timer_;
 
-    ////////////////////////////////////////////////////////////////////////////////
-    PCDGenerator (std::string node_name, const rclcpp::NodeOptions& options)
-      : rclcpp::Node (node_name, options), tf_frame_ ("/base_link")
+  ////////////////////////////////////////////////////////////////////////////////
+  PCDGenerator(std::string node_name, const rclcpp::NodeOptions &options)
+      : rclcpp::Node(node_name, options), tf_frame_("/base_link")
+  {
+    // Maximum number of outgoing messages to be queued for delivery to subscribers = 1
+
+    cloud_topic_ = "cloud_pcd";
+    pub_ = rclcpp::create_publisher<sensor_msgs::msg::PointCloud2>(
+        *this, cloud_topic_, rclcpp::QoS(rclcpp::KeepLast(1)));
+    this->get_parameter("frame_id", tf_frame_);
+    this->get_parameter_or("frame_id", tf_frame_, std::string("/base_link"));
+
+    RCLCPP_INFO(this->get_logger(), "Publishing data on topic %s with frame_id %s.", cloud_topic_.c_str(), tf_frame_.c_str());
+  }
+
+  int start(std::string file_name, double interval)
+  {
+    if (file_name == "" || pcl::io::loadPCDFile(file_name, cloud_) == -1)
     {
-      // Maximum number of outgoing messages to be queued for delivery to subscribers = 1
-
-      cloud_topic_ = "cloud_pcd";
-      pub_ = rclcpp::create_publisher<sensor_msgs::msg::PointCloud2>(
-          *this, cloud_topic_, rclcpp::QoS(rclcpp::KeepLast(1)));
-      this->get_parameter ("frame_id", tf_frame_);
-      this->get_parameter_or ("frame_id", tf_frame_, std::string("/base_link"));
-
-      RCLCPP_INFO (this->get_logger(), "Publishing data on topic %s with frame_id %s.", cloud_topic_.c_str (), tf_frame_.c_str());
+      return -1;
     }
-
-    int start (std::string file_name, double interval)
+    if (0.0 == interval)
     {
-      if (file_name == "" || pcl::io::loadPCDFile (file_name, cloud_) == -1) {
-        return -1;
-      }
-      if (0.0 == interval) {
-        // We only publish once if a 0 seconds interval is given
-        do_publish();
-        // Give subscribers 3 seconds until point cloud decays... a little ugly!
-        std::this_thread::sleep_for(std::chrono::seconds(3));
-      } else {
-        auto period = rclcpp::Duration(
+      // We only publish once if a 0 seconds interval is given
+      do_publish();
+      // Give subscribers 3 seconds until point cloud decays... a little ugly!
+      std::this_thread::sleep_for(std::chrono::seconds(3));
+    }
+    else
+    {
+      auto period = rclcpp::Duration(
           std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(interval)));
-        timer_ = rclcpp::create_timer(
-            get_node_base_interface().get(), get_node_timers_interface().get(),
-            get_clock(), period,
-            std::bind(&PCDGenerator::do_publish, this));
-      }
-      cloud_.header.frame_id = tf_frame_;
-
-      return 0;
+      timer_ = rclcpp::create_timer(this, this->get_clock(), period, std::bind(&PCDGenerator::do_publish, this));
+      // timer_ = rclcpp::create_timer(
+      //     get_node_base_interface().get(), get_node_timers_interface().get(),
+      //     get_clock(), period,
+      //     std::bind(&PCDGenerator::do_publish, this));
     }
+    cloud_.header.frame_id = tf_frame_;
 
-    void do_publish()
+    return 0;
+  }
+
+private:
+  void do_publish()
+  {
+    int nr_points = cloud_.width * cloud_.height;
+    std::string fields_list = pcl::getFieldsList(cloud_);
+
+    RCLCPP_DEBUG(this->get_logger(), "Publishing data with %d points (%s) on topic %s in frame %s.", nr_points, fields_list.c_str(), cloud_topic_, cloud_.header.frame_id.c_str());
+    cloud_.header.stamp = this->now();
+
+    size_t sub_count = pub_->get_subscription_count() > 0;
+    if (sub_count)
     {
-      int nr_points = cloud_.width * cloud_.height;
-      std::string fields_list = pcl::getFieldsList (cloud_);
-
-      RCLCPP_DEBUG (this->get_logger(), "Publishing data with %d points (%s) on topic %s in frame %s.", nr_points, fields_list.c_str (), cloud_topic_, cloud_.header.frame_id.c_str ());
-      cloud_.header.stamp = this->now ();
-
-      size_t sub_count = pub_->get_subscription_count() > 0;
-      if (sub_count)
-      {
-        RCLCPP_DEBUG(this->get_logger(), "Publishing data to %d subscribers.", sub_count);
-        pub_->publish(cloud_);
-      }
+      RCLCPP_DEBUG(this->get_logger(), "Publishing data to %d subscribers.", sub_count);
+      pub_->publish(cloud_);
     }
+  }
 };
 
 /* ---[ */
-int
-  main (int argc, char** argv)
+int main(int argc, char **argv)
 {
   if (argc < 2)
   {
@@ -136,7 +141,7 @@ int
     return (-1);
   }
 
-  rclcpp::init (argc, argv);
+  rclcpp::init(argc, argv);
 
   rclcpp::NodeOptions options;
   auto c = std::make_shared<PCDGenerator>("pcd_to_pointcloud", options);
@@ -157,11 +162,11 @@ int
     RCLCPP_ERROR(c->get_logger(), "Could not load file %s. Exiting.", argv[1]);
     return -1;
   }
-  RCLCPP_INFO (c->get_logger(),
-    "Loaded a point cloud with %d points (total size is %zu) and the following channels: %s.",
-    c->cloud_.width * c->cloud_.height,
-    c->cloud_.data.size(),
-    pcl::getFieldsList(c->cloud_).c_str());
+  RCLCPP_INFO(c->get_logger(),
+              "Loaded a point cloud with %d points (total size is %zu) and the following channels: %s.",
+              c->cloud_.width * c->cloud_.height,
+              c->cloud_.data.size(),
+              pcl::getFieldsList(c->cloud_).c_str());
   rclcpp::spin(c);
   rclcpp::shutdown();
   return 0;

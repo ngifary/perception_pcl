@@ -19,6 +19,7 @@ find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(tf2 REQUIRED)
+find_package(tf2_eigen REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 
@@ -33,6 +34,7 @@ ament_export_dependencies(
   rclcpp_components
   std_msgs
   tf2
+  tf2_eigen
   tf2_geometry_msgs
   tf2_ros
   EIGEN3
@@ -64,11 +66,13 @@ add_library(pcl_ros_io
    src/pcl_ros/io/io.cpp
    src/pcl_ros/io/pcd_io.cpp
 )
-target_link_libraries(pcl_ros_io pcl_ros_tf ${rclcpp_LIBRARIES} ${rmw_implementation_LIBRARIES} ${PCL_LIBRARIES})
-ament_export_libraries(pcl_ros_io)
 ament_target_dependencies(pcl_ros_io
+  "rclcpp"
   "rclcpp_components"
+  "rmw_implementation"
 )
+target_link_libraries(pcl_ros_io pcl_ros_tf)
+ament_export_libraries(pcl_ros_io)
 
 # ## Declare the pcl_ros_features library
 # add_library(pcl_ros_features
@@ -86,19 +90,24 @@ ament_target_dependencies(pcl_ros_io
 #   src/pcl_ros/features/principal_curvatures.cpp
 #   src/pcl_ros/features/vfh.cpp
 # )
-# target_link_libraries (pcl_ros_features ${rclcpp_LIBRARIES} ${rmw_implementation_LIBRARIES} ${PCL_LIBRARIES})
+# ament_target_dependencies(pcl_ros_features
+#   "rclcpp"
+#   "rclcpp_components"
+#   "rmw_implementation"
+# )
+# target_link_libraries(pcl_ros_features pcl_ros_tf)
 # ament_export_libraries(pcl_ros_features)
 
 ## Declare the pcl_ros_filters library
 add_library(pcl_ros_filters
-#  src/pcl_ros/filters/extract_indices.cpp
+  src/pcl_ros/filters/extract_indices.cpp
   src/pcl_ros/filters/filter.cpp
-#  src/pcl_ros/filters/passthrough.cpp
-#  src/pcl_ros/filters/project_inliers.cpp
-#  src/pcl_ros/filters/radius_outlier_removal.cpp
-#  src/pcl_ros/filters/statistical_outlier_removal.cpp
-#  src/pcl_ros/filters/voxel_grid.cpp
-#  src/pcl_ros/filters/crop_box.cpp
+  src/pcl_ros/filters/passthrough.cpp
+  src/pcl_ros/filters/project_inliers.cpp
+  src/pcl_ros/filters/radius_outlier_removal.cpp
+  src/pcl_ros/filters/statistical_outlier_removal.cpp
+  src/pcl_ros/filters/voxel_grid.cpp
+  src/pcl_ros/filters/crop_box.cpp
 )
 ament_target_dependencies(pcl_ros_filters
   "rclcpp"
@@ -191,15 +200,102 @@ install(TARGETS
 
 # ## Declare the pcl_ros_segmentation library
 # add_library (pcl_ros_segmentation
-#   src/pcl_ros/segmentation/extract_clusters.cpp
-#   src/pcl_ros/segmentation/extract_polygonal_prism_data.cpp
+#   # src/pcl_ros/segmentation/extract_clusters.cpp
+#   # src/pcl_ros/segmentation/extract_polygonal_prism_data.cpp
 #   src/pcl_ros/segmentation/sac_segmentation.cpp
-#   src/pcl_ros/segmentation/segment_differences.cpp
+#   # src/pcl_ros/segmentation/segment_differences.cpp
 #   src/pcl_ros/segmentation/segmentation.cpp
 # )
-# target_link_libraries(pcl_ros_segmentation pcl_ros_tf ${rclcpp_LIBRARIES} ${rmw_implementation_LIBRARIES} ${PCL_LIBRARIES})
-# class_loader_hide_library_symbols(pcl_ros_segmentation)
-# 
+# # target_link_libraries(pcl_ros_segmentation pcl_ros_tf ${rclcpp_LIBRARIES} ${rmw_implementation_LIBRARIES} ${PCL_LIBRARIES})
+# # class_loader_hide_library_symbols(pcl_ros_segmentation)
+# ament_target_dependencies(pcl_ros_segmentation
+#   "rclcpp"
+#   "rclcpp_components"
+#   "rmw_implementation"
+# )
+# target_link_libraries(pcl_ros_segmentation pcl_ros_tf)
+# ament_export_libraries(pcl_ros_segmentation)
+
+# # Create component for extract clusters segmentation
+# add_library(segmentation_extract_clusters SHARED
+#   src/pcl_ros/segmentation/extract_clusters.cpp
+# )
+# target_link_libraries(segmentation_extract_clusters pcl_ros_segmentation)
+# rclcpp_components_register_node(segmentation_extract_clusters PLUGIN
+#   PLUGIN "pcl_ros::ExtractClusters"
+#   EXECUTABLE segmentation_extract_clusters_node
+# )
+# install(TARGETS
+#   segmentation_extract_clusters
+#   ARCHIVE DESTINATION lib
+#   LIBRARY DESTINATION lib
+#   RUNTIME DESTINATION bin
+# )
+
+# # Create component for extract polygonal prism data segmentation
+# add_library(segmentation_extract_polygonal_prism_data SHARED
+#   src/pcl_ros/segmentation/extract_polygonal_prism_data.cpp
+# )
+# target_link_libraries(segmentation_extract_polygonal_prism_data pcl_ros_segmentation)
+# rclcpp_components_register_node(segmentation_extract_polygonal_prism_data PLUGIN
+#   PLUGIN "pcl_ros::ExtractPolygonalPrismData"
+#   EXECUTABLE segmentation_extract_polygonal_prism_data_node
+# )
+# install(TARGETS
+#   segmentation_extract_polygonal_prism_data
+#   ARCHIVE DESTINATION lib
+#   LIBRARY DESTINATION lib
+#   RUNTIME DESTINATION bin
+# )
+
+# # Create component for sac segmentation
+# add_library(segmentation_sac_segmentation SHARED
+#   src/pcl_ros/segmentation/sac_segmentation.cpp
+# )
+# target_link_libraries(segmentation_sac_segmentation pcl_ros_segmentation)
+# rclcpp_components_register_node(segmentation_sac_segmentation PLUGIN
+#   PLUGIN "pcl_ros::SACSegmentation"
+#   EXECUTABLE segmentation_sac_segmentation_node
+# )
+# install(TARGETS
+#   segmentation_sac_segmentation
+#   ARCHIVE DESTINATION lib
+#   LIBRARY DESTINATION lib
+#   RUNTIME DESTINATION bin
+# )
+
+# # Create component for segment differences segmentation
+# add_library(segmentation_segment_differences SHARED
+#   src/pcl_ros/segmentation/segment_differences.cpp
+# )
+# target_link_libraries(segmentation_segment_differences pcl_ros_segmentation)
+# rclcpp_components_register_node(segmentation_segment_differences PLUGIN
+#   PLUGIN "pcl_ros::SegmentDifferences"
+#   EXECUTABLE segmentation_segment_differences_node
+# )
+# install(TARGETS
+#   segmentation_segment_differences
+#   ARCHIVE DESTINATION lib
+#   LIBRARY DESTINATION lib
+#   RUNTIME DESTINATION bin
+# )
+
+# # Create component for segmentation
+# add_library(segmentation SHARED
+#   src/pcl_ros/segmentation/segmentation.cpp
+# )
+# target_link_libraries(segmentation pcl_ros_segmentation)
+# rclcpp_components_register_node(segmentation PLUGIN
+#   PLUGIN "pcl_ros::Segmentation"
+#   EXECUTABLE segmentation_node
+# )
+# install(TARGETS
+#   segmentation
+#   ARCHIVE DESTINATION lib
+#   LIBRARY DESTINATION lib
+#   RUNTIME DESTINATION bin
+# )
+
 # ## Declare the pcl_ros_surface library
 # add_library (pcl_ros_surface
 #   src/pcl_ros/surface/surface.cpp
@@ -207,39 +303,46 @@ install(TARGETS
 #   src/pcl_ros/surface/convex_hull.cpp
 #   src/pcl_ros/surface/moving_least_squares.cpp
 # )
-# target_link_libraries(pcl_ros_surface ${rclcpp_LIBRARIES} ${rmw_implementation_LIBRARIES} ${PCL_LIBRARIES})
-# class_loader_hide_library_symbols(pcl_ros_surface)
-# 
-# ## register node plugins
-# #rclcpp_components_register_nodes(${PROJECT_NAME} "${PROJECT_NAME}::PclNode")
-# 
-# ## Tools
-# 
-# add_executable(pcd_to_pointcloud tools/pcd_to_pointcloud.cpp)
-# ament_target_dependencies(pcd_to_pointcloud
-#   "pcl_conversions"
+# # target_link_libraries(pcl_ros_surface ${rclcpp_LIBRARIES} ${rmw_implementation_LIBRARIES} ${PCL_LIBRARIES})
+# # class_loader_hide_library_symbols(pcl_ros_surface)
+# ament_target_dependencies(pcl_ros_segmentation
 #   "rclcpp"
-#   "sensor_msgs"
+#   "rclcpp_components"
+#   "rmw_implementation"
 # )
-# target_link_libraries(pcd_to_pointcloud ${boost_LIBRARIES} ${PCL_LIBRARIES})
-# 
-# add_executable(pointcloud_to_pcd tools/pointcloud_to_pcd.cpp)
-# ament_target_dependencies(pointcloud_to_pcd
-#   "pcl_conversions"
-#   "rclcpp"
-#   "sensor_msgs"
-#   "tf2_eigen"
-#   "tf2_ros"
-# )
-# target_link_libraries(pointcloud_to_pcd ${boost_LIBRARIES} ${PCL_LIBRARIES})
-# 
+# target_link_libraries(pcl_ros_surface)
+# ament_export_libraries(pcl_ros_surface)
+
+## register node plugins
+#rclcpp_components_register_nodes(${PROJECT_NAME} "${PROJECT_NAME}::PclNode")
+
+## Tools
+
+add_executable(pcd_to_pointcloud tools/pcd_to_pointcloud.cpp)
+ament_target_dependencies(pcd_to_pointcloud
+  "pcl_conversions"
+  "rclcpp"
+  "sensor_msgs"
+)
+target_link_libraries(pcd_to_pointcloud ${PCL_LIBRARIES})
+
+add_executable(pointcloud_to_pcd tools/pointcloud_to_pcd.cpp)
+ament_target_dependencies(pointcloud_to_pcd
+  "pcl_conversions"
+  "rclcpp"
+  "sensor_msgs"
+  "tf2_eigen"
+  "tf2_ros"
+)
+target_link_libraries(pointcloud_to_pcd ${PCL_LIBRARIES})
+
 # add_executable(bag_to_pcd tools/bag_to_pcd.cpp)
 # target_link_libraries(bag_to_pcd pcl_ros_tf ${rclcpp_LIBRARIES} ${rmw_implementation_LIBRARIES} ${PCL_LIBRARIES})
-# 
+
 # add_executable(convert_pcd_to_image tools/convert_pcd_to_image.cpp)
 # target_link_libraries(convert_pcd_to_image ${rclcpp_LIBRARIES} ${rmw_implementation_LIBRARIES} ${PCL_LIBRARIES})
-# 
-# 
+
+
 # add_executable(convert_pcd_to_image tools/convert_pcd_to_image.cpp)
 # ament_target_dependencies(convert_pcd_to_image
 #   "pcl_conversions"
@@ -247,17 +350,17 @@ install(TARGETS
 #   "sensor_msgs"
 # )
 # target_link_libraries(convert_pcd_to_image ${boost_LIBRARIES} ${PCL_LIBRARIES})
-# 
-# #add_executable(convert_pointcloud_to_image tools/convert_pointcloud_to_image.cpp)
-# #target_link_libraries(convert_pointcloud_to_image ${rclcpp_LIBRARIES} ${rmw_implementation_LIBRARIES} ${PCL_LIBRARIES})
-# 
-# ## Downloads
-# 
-# #catkin_download(table_scene_lms400.pcd http://download.ros.org/data/pcl/table_scene_lms400.pcd
-# #  DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/samples/data
-# #  MD5 546b5b4822fb1de21b0cf83d41ad6683
-# #)
-# #add_custom_target(download ALL DEPENDS download_extra_data)
+
+# add_executable(convert_pointcloud_to_image tools/convert_pointcloud_to_image.cpp)
+# target_link_libraries(convert_pointcloud_to_image ${rclcpp_LIBRARIES} ${rmw_implementation_LIBRARIES} ${PCL_LIBRARIES})
+
+## Downloads
+
+#catkin_download(table_scene_lms400.pcd http://download.ros.org/data/pcl/table_scene_lms400.pcd
+#  DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/samples/data
+#  MD5 546b5b4822fb1de21b0cf83d41ad6683
+#)
+#add_custom_target(download ALL DEPENDS download_extra_data)
 
 #############
 ## Testing ##
@@ -284,12 +387,12 @@ install(
   TARGETS
     pcl_ros_tf
     pcl_ros_io
-#    pcl_ros_features
+    # pcl_ros_features
     pcl_ros_filters
 #    pcl_ros_surface
 #    pcl_ros_segmentation
-#    pcd_to_pointcloud
-#    pointcloud_to_pcd
+    # pcd_to_pointcloud
+    # pointcloud_to_pcd
 #    bag_to_pcd
 #    convert_pcd_to_image
 #    convert_pointcloud_to_image
@@ -299,6 +402,11 @@ install(
   LIBRARY DESTINATION lib
   INCLUDES DESTINATION include
 )
+
+install(TARGETS
+  pcd_to_pointcloud
+  pointcloud_to_pcd
+  DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY plugins samples
   DESTINATION share/${PROJECT_NAME})

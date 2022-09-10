@@ -50,8 +50,8 @@ pcl_ros::SACSegmentation::SACSegmentation(const rclcpp::NodeOptions &options) : 
   auto custom_qos = rmw_qos_profile_system_default;
   custom_qos.depth = max_queue_size_;
 
-  pub_indices_ = this->create_publisher<PointIndices>("inliers");
-  pub_model_ = this->create_publisher<ModelCoefficients>("model");
+  pub_indices_ = this->create_publisher<PointIndices>("inliers", cloudQoS());
+  pub_model_ = this->create_publisher<ModelCoefficients>("model", cloudQoS());
 
   // ---[ Mandatory parameters
   int model_type;
@@ -117,8 +117,8 @@ void pcl_ros::SACSegmentation::subscribe()
   if (use_indices_)
   {
     // Subscribe to the input using a filter
-    sub_input_filter_.subscribe(this->shared_from_this(), "input");
-    sub_indices_filter_.subscribe(this->shared_from_this(), "indices");
+    sub_input_filter_.subscribe(this->shared_from_this(), "input", cloudQoS().get_rmw_qos_profile());
+    sub_indices_filter_.subscribe(this->shared_from_this(), "indices", cloudQoS().get_rmw_qos_profile());
 
     // when "use_indices" is set to true, and "latched_indices" is set to true,
     // we'll subscribe and get a separate callback for PointIndices that will
@@ -127,14 +127,15 @@ void pcl_ros::SACSegmentation::subscribe()
     if (latched_indices_)
     {
       // Subscribe to a callback that saves the indices
-      sub_indices_filter_.registerCallback(std::bind(&SACSegmentation::indices_callback, this, std::placeholders::_1));
+
+      // sub_indices_filter_.registerCallback(std::bind(&SACSegmentation::indices_callback, this, std::placeholders::_1));
       // Subscribe to a callback that sets the header of the saved indices to the cloud header
-      sub_input_filter_.registerCallback(std::bind(&SACSegmentation::input_callback, this, std::placeholders::_1));
+      // sub_input_filter_.registerCallback(std::bind(&SACSegmentation::input_callback, this, std::placeholders::_1));
 
       // Synchronize the two topics. No need for an approximate synchronizer here, as we'll
       // match the timestamps exactly
       sync_input_indices_e_ = std::make_shared<message_filters::Synchronizer<sync_policies::ExactTime<PointCloud, PointIndices>>>(max_queue_size_);
-      sync_input_indices_e_->connectInput(sub_input_filter_, nf_pi_);
+      sync_input_indices_e_->connectInput(sub_input_filter_, sub_indices_filter_);
       sync_input_indices_e_->registerCallback(std::bind(&SACSegmentation::input_indices_callback, this, std::placeholders::_1, std::placeholders::_2));
     }
     // "latched_indices" not set, proceed with regular <input,indices> pairs
@@ -336,12 +337,12 @@ pcl_ros::SACSegmentationFromNormals::SACSegmentationFromNormals(const rclcpp::No
 void pcl_ros::SACSegmentationFromNormals::subscribe()
 {
   // Subscribe to the input and normals using filters
-  sub_input_filter_.subscribe(this->shared_from_this(), "input");
-  sub_normals_filter_.subscribe(this->shared_from_this(), "normals");
+  sub_input_filter_.subscribe(this->shared_from_this(), "input", cloudQoS().get_rmw_qos_profile());
+  sub_normals_filter_.subscribe(this->shared_from_this(), "normals", cloudQoS().get_rmw_qos_profile());
 
   // Subscribe to an axis direction along which the model search is to be constrained (the first 3 model coefficients will be checked)
   // Type masquerading not yet supported
-  sub_axis_ = this->create_subscription<pcl_msgs::msg::ModelCoefficients>("axis", std::bind(&SACSegmentationFromNormals::axis_callback, this, std::placeholders::_1));
+  sub_axis_ = this->create_subscription<pcl_msgs::msg::ModelCoefficients>("axis", cloudQoS(), std::bind(&SACSegmentationFromNormals::axis_callback, this, std::placeholders::_1));
 
   if (approximate_sync_)
     sync_input_normals_indices_a_ = std::make_shared<message_filters::Synchronizer<sync_policies::ApproximateTime<PointCloud, PointCloudN, PointIndices>>>(max_queue_size_);
@@ -352,7 +353,7 @@ void pcl_ros::SACSegmentationFromNormals::subscribe()
   if (use_indices_)
   {
     // Subscribe to the input using a filter
-    sub_indices_filter_.subscribe(this->shared_from_this(), "indices");
+    sub_indices_filter_.subscribe(this->shared_from_this(), "indices", cloudQoS().get_rmw_qos_profile());
 
     if (approximate_sync_)
       sync_input_normals_indices_a_->connectInput(sub_input_filter_, sub_normals_filter_, sub_indices_filter_);
@@ -362,7 +363,7 @@ void pcl_ros::SACSegmentationFromNormals::subscribe()
   else
   {
     // Create a different callback for copying over the timestamp to fake indices
-    sub_input_filter_.registerCallback(std::bind(&SACSegmentationFromNormals::input_callback, this, std::placeholders::_1));
+    // sub_input_filter_.registerCallback(std::bind(&SACSegmentationFromNormals::input_callback, this, std::placeholders::_1));
 
     if (approximate_sync_)
       sync_input_normals_indices_a_->connectInput(sub_input_filter_, sub_normals_filter_, nf_);
